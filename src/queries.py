@@ -50,3 +50,30 @@ class Queries():
         bollinger_recommendation
         """
         return query
+    
+    def etf_time_series(
+            self,
+            etf_symbol):
+        query = f"""
+        SELECT
+        symbol,
+        date,
+        close,
+        weight_rank
+        FROM
+        stocks_refined_dev.etf_{etf_symbol}_top_ticker_prices
+        WHERE
+        (
+        weight_rank < 12
+        ) 
+        AND (
+        date >= TIMESTAMP_TRUNC(
+            TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL -90 day),
+            day
+            )
+        )
+        AND (
+        date < TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), day)
+        )
+        """
+        return query

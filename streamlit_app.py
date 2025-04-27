@@ -34,7 +34,7 @@ etf_symbol = st.selectbox(
 if not etf_symbol:
     st.error("Please select at least one ETF")
 else:
-    st.subheader(f"Top 10 tickers in: ETF: {etf_symbol}")
+    st.subheader(f"Top 10 tickers in ETF: {etf_symbol}")
     top_tickers_query = queries.etf_top_tickers(etf_symbol)
     df = run_query(top_tickers_query)
     st.dataframe(df.sort_index())
@@ -50,7 +50,7 @@ else:
         )
     st.plotly_chart(fig, theme=None)
 
-    st.subheader(f"Bollinger Recommendations for holdings of ETF: {etf_symbol}")
+    st.subheader(f"Bollinger Recommendations for holdings in ETF: {etf_symbol}")
     br_query = queries.etf_bollinger_recs(etf_symbol)
     df = run_query(br_query)
     fig = px.pie(
@@ -59,4 +59,14 @@ else:
         names='bollinger_recommendation', 
         # title=f"ETF: {etf_symbol}"
         )
+    st.plotly_chart(fig, theme=None)
+
+    st.subheader(f"Time Series of holdings in ETF: {etf_symbol}")
+    etf_ts_query = queries.etf_time_series(etf_symbol)
+    df = run_query(etf_ts_query)
+    fig = px.line(
+        df,
+        x="date",
+        y="close",
+        color="symbol")
     st.plotly_chart(fig, theme=None)
