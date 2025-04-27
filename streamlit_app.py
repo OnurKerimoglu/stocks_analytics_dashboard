@@ -27,11 +27,11 @@ st.write(
 distinct_etfs_query = queries.distinct_etfs()
 df = run_query(distinct_etfs_query)
 etf_symbol = st.selectbox(
-        "Choose the ETF to analyze", list(df.fund_ticker)
+        "Choose the ETF to analyze", sorted(list(df.fund_ticker))
     )
 
 if not etf_symbol:
-    st.error("Please select at least one country.")
+    st.error("Please select at least one ETF")
 else:
     st.subheader(f"Top 10 tickers in: ETF: {etf_symbol}")
     top_tickers_query = queries.top_tickers_of_etf(etf_symbol)
