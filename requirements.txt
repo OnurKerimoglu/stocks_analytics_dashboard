@@ -1,1 +1,2 @@
-streamlit
+pandas-gbq == 0.28.0
+streamlit == 1.44.1
