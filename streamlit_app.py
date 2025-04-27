@@ -46,6 +46,17 @@ else:
         df,
         values='adjusted_total_weight',
         names='sector', 
-        title=f"ETF: {etf_symbol}",)
+        # title=f"ETF: {etf_symbol}"
+        )
     st.plotly_chart(fig, theme=None)
 
+    st.subheader(f"Bollinger Recommendations for holdings of ETF: {etf_symbol}")
+    br_query = queries.etf_bollinger_recs(etf_symbol)
+    df = run_query(br_query)
+    fig = px.pie(
+        df,
+        values='count',
+        names='bollinger_recommendation', 
+        # title=f"ETF: {etf_symbol}"
+        )
+    st.plotly_chart(fig, theme=None)

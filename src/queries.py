@@ -36,3 +36,17 @@ class Queries():
         stocks_refined_dev.etf_{etf_symbol}_sector_aggregates
         """
         return query
+    
+    def etf_bollinger_recs(
+            self,
+            etf_symbol):
+        query = f"""
+        SELECT
+        bollinger_recommendation,
+        COUNT(*) AS count
+        FROM
+        stocks_refined_dev.etf_{etf_symbol}_tickers_combined
+        GROUP BY
+        bollinger_recommendation
+        """
+        return query
