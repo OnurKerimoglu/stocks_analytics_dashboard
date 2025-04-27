@@ -1,5 +1,6 @@
 from google.oauth2 import service_account
 import pandas
+from plotly import express as px
 import streamlit as st
 
 from src.queries import Queries
@@ -34,7 +35,17 @@ if not etf_symbol:
     st.error("Please select at least one ETF")
 else:
     st.subheader(f"Top 10 tickers in: ETF: {etf_symbol}")
-    top_tickers_query = queries.top_tickers_of_etf(etf_symbol)
+    top_tickers_query = queries.etf_top_tickers(etf_symbol)
     df = run_query(top_tickers_query)
     st.dataframe(df.sort_index())
+
+    st.subheader(f"Sectoral Composition of ETF: {etf_symbol}")
+    sectoral_composition_query = queries.etf_sectoral_composition(etf_symbol)
+    df = run_query(sectoral_composition_query)
+    fig = px.pie(
+        df,
+        values='adjusted_total_weight',
+        names='sector', 
+        title=f"ETF: {etf_symbol}",)
+    st.plotly_chart(fig, theme=None)
 
