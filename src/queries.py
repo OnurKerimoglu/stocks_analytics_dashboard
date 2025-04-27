@@ -13,7 +13,7 @@ class Queries():
             self,
             etf_symbol): 
         query = f"""
-        SELECT symbol, company_name, weight, sector
+        SELECT weight_rank as rank, symbol, company_name, weight, sector
         FROM `stocks-455113.stocks_refined_dev.etf_{etf_symbol}_tickers_combined`
         ORDER BY weight_rank ASC
         """

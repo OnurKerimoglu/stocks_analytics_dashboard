@@ -37,6 +37,7 @@ else:
     st.subheader(f"Top 10 tickers in ETF: {etf_symbol}")
     top_tickers_query = queries.etf_top_tickers(etf_symbol)
     df = run_query(top_tickers_query)
+    df.set_index("rank", inplace=True)
     st.dataframe(df.sort_index())
 
     st.subheader(f"Sectoral Composition of ETF: {etf_symbol}")
