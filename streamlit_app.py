@@ -19,15 +19,24 @@ def run_query(query):
 # Print results.
 st.title("Stocks-Analytics")
 st.write(
-    "Here you can find the analytics of the stocks you are interested in."
+    "Here you can analyze the ETFs you are interested in."
 )
 
-st.subheader("Top 10 tickers in: ETF: IVV")
-top_10_tickers_query = """
-    SELECT symbol, company_name, weight, sector
-    FROM `stocks-455113.stocks_refined_dev.etf_IVV_tickers_combined`
-    ORDER BY weight_rank ASC
-    """
-df = run_query(top_10_tickers_query)
-st.dataframe(df.sort_index())
+distinct_etfs_query = """ SELECT DISTINCT(fund_ticker) FROM `stocks-455113.stocks_raw.etfs`"""
+df = run_query(distinct_etfs_query)
+etf_symbol = st.selectbox(
+        "Choose the ETF to analyze", list(df.fund_ticker)
+    )
+
+if not etf_symbol:
+    st.error("Please select at least one country.")
+else:
+    st.subheader(f"Top 10 tickers in: ETF: {etf_symbol}")
+    top_10_tickers_query = f"""
+        SELECT symbol, company_name, weight, sector
+        FROM `stocks-455113.stocks_refined_dev.etf_{etf_symbol}_tickers_combined`
+        ORDER BY weight_rank ASC
+        """
+    df = run_query(top_10_tickers_query)
+    st.dataframe(df.sort_index())
 
