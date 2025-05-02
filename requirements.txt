@@ -1,5 +1,6 @@
+Authlib == 1.5.2
 google-auth == 2.39.0
 orjson == 3.10.16
 pandas-gbq == 0.28.0
 plotly == 6.0.1
-streamlit == 1.44.1
+streamlit == 1.45.0
