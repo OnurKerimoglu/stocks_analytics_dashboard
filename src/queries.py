@@ -38,7 +38,7 @@ class Queries():
         )
         SELECT
         sector,
-        summed_weight / (select summed_weight from sums) * 100 as adjusted_total_weight
+        summed_weight / (select summed_weight from sums) * 100 as cumulative_weight
         FROM
         stocks_refined_dev.etf_{etf_symbol}_sector_aggregates
         """
