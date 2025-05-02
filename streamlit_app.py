@@ -35,7 +35,7 @@ if not etf_symbol:
     st.error("Please select at least one ETF")
 else:
 
-    st.subheader(f"Past 90 days history ETF: {etf_symbol}")
+    st.subheader(f"Past 90 days history (ETF: {etf_symbol})")
     etf_ts_query = queries.etf_main_time_series(etf_symbol)
     df = run_query(etf_ts_query)
     fig = go.Figure(
@@ -51,7 +51,7 @@ else:
         )
     st.plotly_chart(fig, theme=None)
 
-    st.subheader(f"Top 10 tickers in ETF: {etf_symbol}")
+    st.subheader(f"Holding weights (ETF: {etf_symbol})")
     top_tickers_query = queries.etf_top_tickers(etf_symbol)
     df = run_query(top_tickers_query)
     df.set_index("rank", inplace=True)
@@ -68,7 +68,7 @@ else:
         )
     st.plotly_chart(fig, theme=None)
 
-    st.subheader(f"Bollinger Recommendations for holdings in ETF: {etf_symbol}")
+    st.subheader(f"Bollinger Recommendations for holdings (ETF: {etf_symbol})")
     br_query = queries.etf_bollinger_recs(etf_symbol)
     df = run_query(br_query)
     fig = px.pie(
@@ -79,7 +79,7 @@ else:
         )
     st.plotly_chart(fig, theme=None)
 
-    st.subheader(f"Time Series of holdings in ETF: {etf_symbol}")
+    st.subheader(f"Time Series of top holdings (ETF: {etf_symbol})")
     etf_ts_query = queries.etf_time_series(etf_symbol)
     df = run_query(etf_ts_query)
     fig = px.line(
