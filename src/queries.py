@@ -2,10 +2,17 @@ class Queries():
     def __init__(self):
         pass
     
-    def distinct_etfs(self):
+    def etf_info(self):
         query = """
-        SELECT DISTINCT(fund_ticker)
-        FROM `stocks-455113.stocks_raw.etfs`
+        WITH distinct_etfs AS (
+        SELECT DISTINCT(fund_ticker) as symbol
+        FROM `stocks-455113.stocks_raw_dev.etfs`
+        )
+        SELECT
+        i.symbol, i.company_name
+        FROM stocks_raw_dev.stock_info i
+        JOIN distinct_etfs e on e.symbol=i.symbol
+
         """
         return query
     
@@ -101,5 +108,18 @@ class Queries():
         AND (
         date < TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), day)
         )
+        """
+        return query
+    
+    def etf_main_info(
+            self,
+            etf_symbol):
+        query = f"""
+        SELECT
+        symbol, company_name, date_fetched
+        FROM
+        stocks_raw_dev.stock_info
+        WHERE
+        symbol = '{etf_symbol}'
         """
         return query

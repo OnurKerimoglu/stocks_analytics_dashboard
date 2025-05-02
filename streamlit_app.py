@@ -23,18 +23,17 @@ def run_query(query):
 # Print results.
 st.title("Stocks-Analytics")
 
-etfs_query = queries.distinct_etfs()
+etfs_query = queries.etf_info()
 df = run_query(etfs_query)
-available_etf_symbols = list(df.fund_ticker.unique())
-etf_symbol = st.selectbox(
-        "Choose the ETF to analyze", sorted(available_etf_symbols)
+df["symbol_name"] = df.symbol + " (" + df.company_name + ")"
+symbol_name = st.selectbox(
+        "Choose the ETF to analyze", sorted(df.symbol_name)
     )
+etf_symbol = df[df.symbol_name == symbol_name].symbol.values[0]
 
 if not etf_symbol:
     st.error("Please select at least one ETF")
 else:
-    st.write(
-    f"Chosen ETF: {etf_symbol}")
 
     st.subheader(f"Past 90 days history ETF: {etf_symbol}")
     etf_ts_query = queries.etf_main_time_series(etf_symbol)
