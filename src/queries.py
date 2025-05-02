@@ -77,3 +77,29 @@ class Queries():
         )
         """
         return query
+
+    def etf_main_time_series(
+            self,
+            etf_symbol):
+        query = f"""
+        SELECT
+        date,
+        close,
+        high,
+        low,
+        open
+        FROM
+        stocks_raw_dev.stock_prices
+        WHERE
+        symbol = '{etf_symbol}'
+        AND (
+        date >= TIMESTAMP_TRUNC(
+            TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL -90 day),
+            day
+            )
+        )
+        AND (
+        date < TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), day)
+        )
+        """
+        return query

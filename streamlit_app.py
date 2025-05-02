@@ -1,6 +1,7 @@
 from google.oauth2 import service_account
 import pandas
 from plotly import express as px
+from plotly import graph_objects as go
 import streamlit as st
 
 from src.queries import Queries
@@ -21,19 +22,36 @@ def run_query(query):
 
 # Print results.
 st.title("Stocks-Analytics")
-st.write(
-    "Here you can analyze the ETFs you are interested in."
-)
 
-distinct_etfs_query = queries.distinct_etfs()
-df = run_query(distinct_etfs_query)
+etfs_query = queries.distinct_etfs()
+df = run_query(etfs_query)
+available_etf_symbols = list(df.fund_ticker.unique())
 etf_symbol = st.selectbox(
-        "Choose the ETF to analyze", sorted(list(df.fund_ticker))
+        "Choose the ETF to analyze", sorted(available_etf_symbols)
     )
 
 if not etf_symbol:
     st.error("Please select at least one ETF")
 else:
+    st.write(
+    f"Chosen ETF: {etf_symbol}")
+
+    st.subheader(f"Past 90 days history ETF: {etf_symbol}")
+    etf_ts_query = queries.etf_main_time_series(etf_symbol)
+    df = run_query(etf_ts_query)
+    fig = go.Figure(
+        data=[
+            go.Candlestick(
+                x=df['date'],
+                open=df['open'],
+                high=df['high'],
+                low=df['low'],
+                close=df['close']
+                )
+            ]
+        )
+    st.plotly_chart(fig, theme=None)
+
     st.subheader(f"Top 10 tickers in ETF: {etf_symbol}")
     top_tickers_query = queries.etf_top_tickers(etf_symbol)
     df = run_query(top_tickers_query)
