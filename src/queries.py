@@ -123,3 +123,16 @@ class Queries():
         symbol = '{etf_symbol}'
         """
         return query
+    
+    def user_etfs(
+            self,
+            user
+        ):
+        query="""
+        SELECT
+        symbol
+        FROM
+        stocks_user_data.ETFS_to_track
+        where user = '{user}'   
+        """
+        return query
