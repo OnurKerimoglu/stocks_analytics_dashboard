@@ -7,7 +7,7 @@ from pandas.api.types import (
 import pandas as pd
 import streamlit as st
 
-from src.util import get_ishares_etfs
+from src.utils import get_ishares_etfs
 
 def sequential_df_filter(df, to_filter_columns):
     for col in to_filter_columns:
