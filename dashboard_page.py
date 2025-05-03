@@ -1,24 +1,11 @@
-from google.oauth2 import service_account
-import pandas
 from plotly import express as px
 from plotly import graph_objects as go
 import streamlit as st
 
 from src.queries import Queries
+from src.utils import run_query
 
 queries = Queries()
-
-# Create API client.
-credentials = service_account.Credentials.from_service_account_info(
-    st.secrets["gcp_service_account"]
-)
-
-# Perform query.
-# Uses st.cache_data to only rerun when the query changes or after 10 min.
-@st.cache_data(ttl=600)
-def run_query(query):
-    df = pandas.read_gbq(query, credentials=credentials)
-    return df
 
 # Print results.
 st.title("Stocks-Analytics Dashboard")
