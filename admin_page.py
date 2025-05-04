@@ -8,7 +8,7 @@ from pandas.api.types import (
 import pandas as pd
 import streamlit as st
 
-from src.utils import get_ishares_etfs, run_query_nocache, execute_query, insert_df_to_table
+from src.utils import get_ishares_etfs, run_query_nocache, execute_query, insert_df_to_table, get_etf_holdings
 from src.queries import Queries
 
 USER_DATASET = "stocks_user_data"
@@ -153,16 +153,18 @@ else:
                     use_container_width=True,
                     hide_index=True,
                     on_select="rerun",
-                    selection_mode="multi-row",
+                    selection_mode="single-row",
                 )
                 selected_rows = event.selection.rows
                 etfs_filt2 = etfs_filt.iloc[selected_rows]
 
                 # # Display selected ETF
                 if etfs_filt2.shape[0] > 0:
-                    st.write(f"Selected ETFs:")
-                    st.write(', '.join(etfs_filt2.symbol.values))
-
+                    etf_symbol = etfs_filt2.symbol.values[0]
+                    df_holdings = get_etf_holdings(etf_symbol)
+                    df_holdings = df_holdings[df_holdings['asset_class'] == 'Equity']
+                    st.info(f"{etf_symbol} consists of {df_holdings.shape[0]} holdings:")
+                    st.dataframe(df_holdings)
     else:
         st.write(f"User {username} ({useremail}) not authorized")
         st.stop()

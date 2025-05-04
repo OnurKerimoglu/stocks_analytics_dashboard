@@ -70,6 +70,10 @@ def get_ishares_etfs():
     dfs.rename(columns={'ticker':'symbol'}, inplace=True)
     return dfs
 
+def get_etf_holdings(fund_ticker):
+    etf_scraper = ETFScraper()
+    df = etf_scraper.query_holdings(fund_ticker, None)
+    return df
 
 if __name__ == '__main__':
     get_ishares_etfs()
