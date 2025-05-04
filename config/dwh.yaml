@@ -1,8 +1,14 @@
 shared:
-  project_id: stocks-455113
+  project: stocks-455113
+  T_etfs: etfs
+  T_info: stock_info
+  T_prices: stock_prices
+  T_etfs2track: ETFS_to_track
 dev:
-  dataset_raw: stocks_raw_dev
-  dataset_refined: stocks_refined_dev
+  DS_raw: stocks_raw_dev
+  DS_refined: stocks_refined_dev
+  DS_user: stocks_user_data_dev
 prod:
-  dataset_raw: stocks_raw
-  dataset_refined: stocks_refined
+  DS_raw: stocks_raw
+  DS_refined: stocks_refined
+  DS_user: stocks_user_data
