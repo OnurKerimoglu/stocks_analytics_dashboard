@@ -1,0 +1,6 @@
+dev:
+  dataset_raw: stocks_raw_dev
+  dataset_refined: stocks_refined_dev
+prod:
+  dataset_raw: stocks_raw
+  dataset_refined: stocks_refined
