@@ -1,3 +1,5 @@
+shared:
+  project_id: stocks-455113
 dev:
   dataset_raw: stocks_raw_dev
   dataset_refined: stocks_refined_dev

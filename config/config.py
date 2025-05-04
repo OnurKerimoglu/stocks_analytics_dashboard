@@ -1,4 +1,5 @@
 import yaml
+import streamlit as st
 
 def load_configs(env):
     print(f'loading configs for {env}')
@@ -7,5 +8,12 @@ def load_configs(env):
     dwh_fpath = "config/dwh.yaml"
     with open(dwh_fpath, 'r') as f:
         config_dwh = yaml.safe_load(f)
-    config['DWH'] = config_dwh[env]
+    dwh_shared = config_dwh['shared']
+    dwh_env = config_dwh[env]
+    config['DWH'] = {**dwh_shared, **dwh_env} 
     return config
+
+
+if __name__ == '__main__':
+    config = load_configs('dev')
+    print(config)
