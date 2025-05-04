@@ -8,12 +8,12 @@ from pandas.api.types import (
 import pandas as pd
 import streamlit as st
 
-from src.utils import get_ishares_etfs, run_query_nocache, execute_query, insert_df_to_table, get_etf_holdings
+from src.gc_utils import BQFunctions
+from src.utils import get_ishares_etfs, get_etf_holdings
 from src.queries import Queries
 from streamlit_app import CONFIG
 
-# USER_DATASET = "stocks_user_data"
-# ETFS_TABLE = "ETFS_to_track"
+DWH = CONFIG['DWH']
 queries = Queries(CONFIG)
 
 def sequential_df_filter(df, to_filter_columns):
@@ -36,6 +36,7 @@ else:
     useremail = st.user.email
     credentials = service_account.Credentials.from_service_account_info(
         st.secrets["gcp_service_account_admin"])
+    bqfuncs = BQFunctions(CONFIG, credentials)
 
     # Check for admin status based on email domain
     if st.user.email in st.secrets.security.admins:
@@ -46,9 +47,8 @@ else:
 
         user_etfs_query = queries.user_etfs(
                 useremail)
-        df_all = run_query_nocache(
-            user_etfs_query,
-            _credentials=credentials)
+        df_all = bqfuncs.run_query_nocache(
+            user_etfs_query)
         
         df_all['symbol_user'] = df_all.symbol + "_" + df_all.user
         symbols_tracked_by_user = df_all.symbol_user.unique()
@@ -77,8 +77,9 @@ else:
                     symbols_str = ', '.join(symbols)
                     confirmed = st.button(f"Confirm removing etfs: {symbols_str}")
                     if confirmed:
-                        query = f"DELETE FROM stocks_user_data.ETFS_to_track WHERE symbol IN ({symbols_str}) AND user = '{useremail}'"
-                        execute_query(query, credentials)
+                        table_id = f"{DWH['project']}.{DWH['DS_user']}.{DWH['T_etfs2track']}"
+                        query = f"DELETE FROM {table_id} WHERE symbol IN ({symbols_str}) AND user = '{useremail}'"
+                        bqfuncs.execute_query(query)
                         st.info('Removal successful')
             else:
                 st.write(f"Currently no tracked ETFs by user: {useremail}")
@@ -134,10 +135,9 @@ else:
                     'user': useremail})
                 # print(df.head())
                 # adding to BQ table
-                Query = insert_df_to_table(
+                Query = bqfuncs.insert_df_to_table(
                     df=df,
-                    dataset_table=f'{USER_DATASET}.{ETFS_TABLE}',
-                    credentials=credentials)
+                    dataset_table=f"{DWH['DS_user']}.{DWH['T_etfs2track']}")
                 st.info('Insertion successful')
             
         with browser:
