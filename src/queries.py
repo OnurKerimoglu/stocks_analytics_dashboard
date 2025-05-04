@@ -1,16 +1,18 @@
 class Queries():
-    def __init__(self):
-        pass
+    def __init__(self, CONFIG):
+        self.DWH = CONFIG['DWH']
     
     def etf_info(self):
-        query = """
+        table_id_etfs = f"{self.DWH['project']}.{self.DWH['DS_raw']}.{self.DWH['T_etfs']}"
+        table_id_info = f"{self.DWH['project']}.{self.DWH['DS_raw']}.{self.DWH['T_info']}"
+        query = f"""
         WITH distinct_etfs AS (
         SELECT DISTINCT(fund_ticker) as symbol
-        FROM `stocks-455113.stocks_raw_dev.etfs`
+        FROM {table_id_etfs}
         )
         SELECT
         i.symbol, i.company_name
-        FROM stocks_raw_dev.stock_info i
+        FROM {table_id_info} i
         JOIN distinct_etfs e on e.symbol=i.symbol
 
         """
@@ -18,10 +20,11 @@ class Queries():
     
     def etf_top_tickers(
             self,
-            etf_symbol): 
+            etf_symbol):
+        table_id_combined = f"{self.DWH['project']}.{self.DWH['DS_refined']}.etf_{etf_symbol}_tickers_combined"
         query = f"""
         SELECT weight_rank as rank, symbol, company_name, weight, sector
-        FROM `stocks-455113.stocks_refined_dev.etf_{etf_symbol}_tickers_combined`
+        FROM {table_id_combined}
         ORDER BY weight_rank ASC
         """
         return query
@@ -29,30 +32,29 @@ class Queries():
     def etf_sectoral_composition(
             self,
             etf_symbol):
+        table_id_aggregates = f"{self.DWH['project']}.{self.DWH['DS_refined']}.etf_{etf_symbol}_sector_aggregates"
         query = f"""
         WITH sums AS (
         SELECT
         sum(summed_weight) as summed_weight
-        FROM
-        stocks_refined_dev.etf_{etf_symbol}_sector_aggregates
+        FROM {table_id_aggregates}
         )
         SELECT
         sector,
         summed_weight / (select summed_weight from sums) * 100 as cumulative_weight
-        FROM
-        stocks_refined_dev.etf_{etf_symbol}_sector_aggregates
+        FROM {table_id_aggregates}
         """
         return query
     
     def etf_bollinger_recs(
             self,
             etf_symbol):
+        table_id_combined = f"{self.DWH['project']}.{self.DWH['DS_refined']}.etf_{etf_symbol}_tickers_combined"
         query = f"""
         SELECT
         bollinger_recommendation,
         COUNT(*) AS count
-        FROM
-        stocks_refined_dev.etf_{etf_symbol}_tickers_combined
+        FROM {table_id_combined}
         GROUP BY
         bollinger_recommendation
         """
@@ -61,14 +63,14 @@ class Queries():
     def etf_time_series(
             self,
             etf_symbol):
+        table_id_topprices = f"{self.DWH['project']}.{self.DWH['DS_refined']}.etf_{etf_symbol}_top_ticker_prices"
         query = f"""
         SELECT
         symbol,
         date,
         close,
         weight_rank
-        FROM
-        stocks_refined_dev.etf_{etf_symbol}_top_ticker_prices
+        FROM {table_id_topprices}
         WHERE
         (
         weight_rank < 12
@@ -88,6 +90,7 @@ class Queries():
     def etf_main_time_series(
             self,
             etf_symbol):
+        table_id_prices = f"{self.DWH['project']}.{self.DWH['DS_raw']}.{self.DWH['T_prices']}"
         query = f"""
         SELECT
         date,
@@ -95,8 +98,7 @@ class Queries():
         high,
         low,
         open
-        FROM
-        stocks_raw_dev.stock_prices
+        FROM {table_id_prices}
         WHERE
         symbol = '{etf_symbol}'
         AND (
@@ -114,11 +116,11 @@ class Queries():
     def etf_main_info(
             self,
             etf_symbol):
+        table_id_info = f"{self.DWH['project']}.{self.DWH['DS_raw']}.{self.DWH['T_info']}"
         query = f"""
         SELECT
         symbol, company_name, date_fetched
-        FROM
-        stocks_raw_dev.stock_info
+        FROM {table_id_info}
         WHERE
         symbol = '{etf_symbol}'
         """
@@ -126,14 +128,14 @@ class Queries():
     
     def user_etfs(
             self,
-            user,
-            table
+            user
         ):
+        table_id_etfs = f"{self.DWH['project']}.{self.DWH['DS_user']}.{self.DWH['T_etfs2track']}"
         query=f"""
         SELECT
         symbol, user
         FROM
-        {table}
+        {table_id_etfs}
         where user = '{user}'   
         """
         return query

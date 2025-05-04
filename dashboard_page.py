@@ -4,8 +4,9 @@ import streamlit as st
 
 from src.queries import Queries
 from src.utils import run_query
+from streamlit_app import CONFIG
 
-queries = Queries()
+queries = Queries(CONFIG)
 
 # Print results.
 st.title("Stocks-Analytics Dashboard")

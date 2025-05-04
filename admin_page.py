@@ -10,10 +10,11 @@ import streamlit as st
 
 from src.utils import get_ishares_etfs, run_query_nocache, execute_query, insert_df_to_table, get_etf_holdings
 from src.queries import Queries
+from streamlit_app import CONFIG
 
-USER_DATASET = "stocks_user_data"
-ETFS_TABLE = "ETFS_to_track"
-queries = Queries()
+# USER_DATASET = "stocks_user_data"
+# ETFS_TABLE = "ETFS_to_track"
+queries = Queries(CONFIG)
 
 def sequential_df_filter(df, to_filter_columns):
     for col in to_filter_columns:
@@ -44,8 +45,7 @@ else:
         etfs = get_ishares_etfs()
 
         user_etfs_query = queries.user_etfs(
-                useremail,
-                table=f'{USER_DATASET}.{ETFS_TABLE}')
+                useremail)
         df_all = run_query_nocache(
             user_etfs_query,
             _credentials=credentials)
