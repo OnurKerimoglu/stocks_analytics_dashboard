@@ -46,16 +46,18 @@ else:
         user_etfs_query = queries.user_etfs(
                 useremail,
                 table=f'{USER_DATASET}.{ETFS_TABLE}')
-        df = run_query_nocache(
+        df_all = run_query_nocache(
             user_etfs_query,
             _credentials=credentials)
         
-        symbols_tracked = df.symbol.unique()
+        df_all['symbol_user'] = df_all.symbol + "_" + df_all.user
+        symbols_tracked_by_user = df_all.symbol_user.unique()
         
         manager, browser = st.tabs(["Manager", "Browser"])
         
         with manager:
             st.subheader(f"Manage Tracked ETFs:")
+            df = df_all[['symbol']]
             if df.shape[0] > 0:
                 st.write(f"Showing currently tracked ETFs by user: {useremail}.")
                 st.write("Select rows to remove:")
@@ -77,6 +79,7 @@ else:
                     if confirmed:
                         query = f"DELETE FROM stocks_user_data.ETFS_to_track WHERE symbol IN ({symbols_str}) AND user = '{useremail}'"
                         execute_query(query, credentials)
+                        st.info('Removal successful')
             else:
                 st.write(f"Currently no tracked ETFs by user: {useremail}")
             
@@ -93,7 +96,8 @@ else:
             user_input = user_input.upper().strip()
             # Button to add item
             if st.button("Add to List"):
-                if user_input not in symbols_tracked:
+                symbol_user = user_input + "_" + useremail
+                if symbol_user not in symbols_tracked_by_user:
                     if user_input in etfs.symbol.values:
                         if user_input not in st.session_state.selection:
                             st.session_state.selection.append(user_input)
@@ -105,7 +109,7 @@ else:
                         st.warning(f"'{user_input}' is not available")
                         st.write("Enter one of: {}".format(', '.join(etfs.symbol.values)))
                 else:
-                    st.info(f"'{user_input}' is already tracked.")
+                    st.info(f"'{user_input}' is already tracked by user {useremail}.")
 
             # Show current list
             if st.session_state.final_list:
@@ -134,6 +138,7 @@ else:
                     df=df,
                     dataset_table=f'{USER_DATASET}.{ETFS_TABLE}',
                     credentials=credentials)
+                st.info('Insertion successful')
             
         with browser:
             st.subheader(f"Browse ETFs:")

@@ -131,7 +131,7 @@ class Queries():
         ):
         query=f"""
         SELECT
-        symbol
+        symbol, user
         FROM
         {table}
         where user = '{user}'   
