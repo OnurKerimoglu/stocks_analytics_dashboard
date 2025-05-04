@@ -2,8 +2,7 @@ import streamlit as st
 
 from config.config import load_configs
 
-# env = 'dev'
-env = 'prod'
+env = st.secrets["global"]["env"]
 CONFIG = load_configs(env)
 
 dashboard = st.Page(
