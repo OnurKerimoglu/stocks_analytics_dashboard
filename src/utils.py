@@ -33,7 +33,7 @@ def execute_query(query, credentials):
         query_job = client.query(query)
         result = query_job.result()
         print(result)
-        st.info('Successfully executed query')
+        # st.info('Successfully executed query')
     except Exception as e:
         st.error(f'Errors occurred while executing query:\n{e}')
         
@@ -58,7 +58,7 @@ def insert_df_to_table(df, dataset_table, credentials):
             table_id,
             job_config=bigquery.LoadJobConfig(write_disposition="WRITE_APPEND"))
         job.result()  # Wait for the job to finish
-        st.info('Successfully inserted df to table')
+        # st.info('Successfully inserted df to table')
     except Exception as e:
         st.error(f'Errors occurred while inserting df to table: {table_id}:\n{e}')
 
