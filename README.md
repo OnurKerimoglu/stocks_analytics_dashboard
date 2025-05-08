@@ -6,6 +6,22 @@ This is the dashboard component of the [stocks-analytics](https://github.com/Onu
 
 Below, a brief description of the dashboard contents, and setup instructions are provided to facilitate potential repurposing.
 
+# Pages
+
+## Admin Page
+Admin page can be accessed ony after a succesful login, meaning that the email provided by the user needs match one of the admin emails in the secrets file, under the `[global]` block (see: [Streamlit Secrets](#streamlit-secrets)). Two Tabs are available: Manager and Browser.
+
+### Manager Tab
+Under this tab, tracked ETFs (by the currently authenticated admin) can be managed, i.e., currently tracked ETFs can be removed and new ETFs can be added:
+
+<img src="documentation/images/admin_manager.png" alt="" width="400"/>
+
+### Browser Tab
+Under this tab, ETFs can be browsed, sequentially filtered according to the region, country and asset class:
+
+<img src="documentation/images/admin_browser.png" alt="" width="400"/>
+
+
 # Setup Instructions
 
 ## streamlit secrets
