@@ -8,6 +8,40 @@ Below, a brief description of the dashboard contents, and setup instructions are
 
 # Pages
 
+## Dashboard Page
+The first step is to choose one of the tracked ETFs to analyze:
+
+<img src="documentation/images/dashboard_etf_selection.png" alt="" width="400"/>
+
+Here, the list of ETFs tracked by the current user will be pulled from a Bigquery table (in stocks-analytics project, see the intro) that contains the tracked ETF symbols, and provided as options. Rest of the panels will be refreshed according to the chosen symbol.
+
+**90 days history**:    
+This is a classical [candlestick chart](#https://en.wikipedia.org/wiki/Candlestick_chart) of the ETF being analyzed for the past 90 days: 
+
+<img src="documentation/images/dashboard_etf_candlestick.png" alt="" width="400"/>
+
+**90 days history of top holdings**:  
+These are time series plots of the most important (by weight) 10 tickers for the past 90 days:
+
+<img src="documentation/images/dashboard_etf_ts_topholdings.png" alt="" width="400"/>
+
+**Holding Weights**:  
+This is a table that shows the holding weights tracked by the ETF, sorted by their weight, in descending order:
+
+<img src="documentation/images/dashboard_holding_weights.png" alt="" width="400"/>
+
+**Sectoral Composition**:  
+This pie chart is based on the cumulative weights of sectors of holdings tracked by the ETF:
+
+<img src="documentation/images/dashboard_etf_sectoral_comp.png" alt="" width="400"/>
+
+**Bollinger Recommendation for Holdings**:  
+
+This pie chart reflects the counts of tickers for each [Bollinger Band](<img src="documentation/images/dashboard_holding_weights.png" alt="" width="400"/>) recommendation class:
+
+<img src="documentation/images/dashboard_etf_recommendations.png" alt="" width="400"/>
+
+
 ## Admin Page
 Admin page can be accessed ony after a succesful login, meaning that the email provided by the user needs match one of the admin emails in the secrets file, under the `[global]` block (see: [Streamlit Secrets](#streamlit-secrets)). Two Tabs are available: Manager and Browser.
 
