@@ -112,6 +112,20 @@ class Queries():
         )
         """
         return query
+
+    def etf_forecast(
+            self,
+            etf_symbol):
+        table_id_forecasts = f"{self.DWH['project']}.{self.DWH['DS_refined']}.{self.DWH['T_forecasts_latest']}"
+        query = f"""
+        SELECT
+        Date as date,
+        Close as close,
+        FROM {table_id_forecasts}
+        WHERE
+        Ticker = '{etf_symbol}'
+        """
+        return query
     
     def etf_main_info(
             self,

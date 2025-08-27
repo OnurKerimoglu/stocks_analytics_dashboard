@@ -26,17 +26,35 @@ else:
     st.subheader(f"90 days history (ETF: {etf_symbol})")
     etf_ts_query = queries.etf_main_time_series(etf_symbol)
     df = run_query(etf_ts_query)
-    fig = go.Figure(
-        data=[
-            go.Candlestick(
-                x=df['date'],
-                open=df['open'],
-                high=df['high'],
-                low=df['low'],
-                close=df['close']
-                )
-            ]
+    etf_fcst_query = queries.etf_forecast(etf_symbol)
+    df_fcst = run_query(etf_fcst_query)
+    fig = go.Figure()
+    fig.add_trace(
+        go.Candlestick(
+            x=df['date'],
+            open=df['open'],
+            high=df['high'],
+            low=df['low'],
+            close=df['close'],
+            name="Realized"
+            )
         )
+    # Forecasted close as a dashed line with markers
+    fig.add_trace(
+        go.Scatter(
+            x=df_fcst["date"],
+            y=df_fcst["close"],
+            mode="markers",
+            name="Forecast",
+            marker=dict(symbol="diamond", color="red", size=8),
+            # line=dict(dash="dash")
+            )
+        )
+    # Ruler and Legend
+    fig.update_layout(
+        xaxis_rangeslider_visible=True,
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0)
+    )
     st.plotly_chart(fig, theme=None)
 
     st.subheader(f"90 days history of top holdings (ETF: {etf_symbol})")
