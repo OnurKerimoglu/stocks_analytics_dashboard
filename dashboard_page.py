@@ -23,7 +23,7 @@ if not etf_symbol:
     st.error("Please select at least one ETF")
 else:
 
-    st.subheader(f"90 days history (ETF: {etf_symbol})")
+    st.subheader(f"{etf_symbol}: Recent history and forecast")
     etf_ts_query = queries.etf_main_time_series(etf_symbol)
     df = run_query(etf_ts_query)
     etf_fcst_query = queries.etf_forecast(etf_symbol)
@@ -57,7 +57,7 @@ else:
     )
     st.plotly_chart(fig, theme=None)
 
-    st.subheader(f"90 days history of top holdings (ETF: {etf_symbol})")
+    st.subheader(f"{etf_symbol}: 90 days history of top holdings")
     etf_ts_query = queries.etf_time_series(etf_symbol)
     df = run_query(etf_ts_query)
     fig = px.line(
@@ -67,13 +67,13 @@ else:
         color="symbol")
     st.plotly_chart(fig, theme=None)
     
-    st.subheader(f"Holding weights (ETF: {etf_symbol})")
+    st.subheader(f"{etf_symbol}: Holding weights")
     top_tickers_query = queries.etf_top_tickers(etf_symbol)
     df = run_query(top_tickers_query)
     df.set_index("rank", inplace=True)
     st.dataframe(df.sort_index())
 
-    st.subheader(f"Sectoral Composition (ETF: {etf_symbol})")
+    st.subheader(f"{etf_symbol}: Sectoral composition")
     sectoral_composition_query = queries.etf_sectoral_composition(etf_symbol)
     df = run_query(sectoral_composition_query)
     fig = px.pie(
@@ -84,7 +84,7 @@ else:
         )
     st.plotly_chart(fig, theme=None)
 
-    st.subheader(f"Bollinger Recommendations for holdings (ETF: {etf_symbol})")
+    st.subheader(f"{etf_symbol}: Bollinger recommendations for holdings")
     br_query = queries.etf_bollinger_recs(etf_symbol)
     df = run_query(br_query)
     fig = px.pie(
